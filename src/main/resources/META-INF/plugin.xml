@@ -1,15 +1,50 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.sebnoirot.copier</id>
-    <name>copier</name>
+    <id>com.sebnoirot.copierhelper</id>
+    <name>Copier Helper</name>
     <vendor>seb-noirot</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <resource-bundle>messages.CopierBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.sebnoirot.copier.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.sebnoirot.copier.startup.MyProjectActivity" />
+        <applicationService serviceImplementation="com.sebnoirot.copierhelper.settings.CopierSettings"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.sebnoirot.copierhelper.settings.CopierSettingsConfigurable"
+            id="com.sebnoirot.copierhelper.settings.CopierSettingsConfigurable"
+            displayName="Copier Helper"/>
+        <moduleBuilder
+            builderClass="com.sebnoirot.copierhelper.wizard.CopierModuleBuilder"
+            id="CopierModuleBuilder"
+            order="first"/>
+        <postStartupActivity implementation="com.sebnoirot.copierhelper.update.CopierUpdateStartupActivity"/>
+        <notificationGroup id="Copier Helper" displayType="BALLOON"/>
+        <editorNotificationProvider implementation="com.sebnoirot.copierhelper.update.CopierUpdateEditorNotificationProvider"/>
     </extensions>
+
+    <actions>
+        <group id="CopierHelper.CopierMenu" 
+               text="Copier" 
+               description="Copier template actions"
+               popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+
+            <action id="CopierHelper.RunCopier" 
+                    class="com.sebnoirot.copierhelper.actions.RunCopierAction" 
+                    text="Copy" 
+                    description="Run Copier template"/>
+
+            <action id="CopierHelper.UpdateCopier" 
+                    class="com.sebnoirot.copierhelper.actions.UpdateCopierAction" 
+                    text="Update" 
+                    description="Update Copier project"/>
+
+            <action id="CopierHelper.OpenSettings" 
+                    class="com.sebnoirot.copierhelper.actions.OpenCopierSettingsAction" 
+                    text="Settings" 
+                    description="Open Copier Helper settings"/>
+        </group>
+    </actions>
 </idea-plugin>
