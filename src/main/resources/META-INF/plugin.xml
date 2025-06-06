@@ -1,6 +1,6 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.sebnoirot.copierhelper</id>
+    <id>com.github.sebnoirot.copier</id>
     <name>Copier Helper</name>
     <vendor>seb-noirot</vendor>
 
