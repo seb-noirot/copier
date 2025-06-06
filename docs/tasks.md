@@ -171,3 +171,29 @@ ApplicationManager.getApplication().executeOnPooledThread { ... }
 
 Or use a `Task.Backgroundable` if you want to integrate the update check into the IntelliJ progress UI. If any result needs to be shown in the UI, wrap it with `invokeLater { ... }`.
 ```
+
+### 20. Replace Deprecated API: TextFieldWithBrowseButton.addBrowseFolderListener ✅
+```juni
+The plugin uses `TextFieldWithBrowseButton.addBrowseFolderListener(...)`, which is scheduled for removal.
+
+Replace it with the newer `BrowseFolderListenerListener` usage pattern. Use `FileChooserDescriptor` and `TextBrowseFolderListener` as required.
+
+Update the following classes:
+- `TemplateUrlDialog.<init>(Project)`
+- `CopierSettingsComponent.<init>()`
+
+Ensure compatibility with IntelliJ Platform 2025.2 and suppress warnings for deprecated APIs where appropriate if transitional.
+```
+
+### 21. Replace Deprecated APIs for IntelliJ Platform 2025.2 ✅
+```juni
+The plugin uses several deprecated APIs that may be removed in future IntelliJ releases. Replace the following:
+
+1. Replace `FileChooserDescriptorFactory.createSingleFileDescriptor()` with a suitable non-deprecated alternative (e.g., using new constructors).
+2. Replace `VirtualFileManager.addVirtualFileListener(...)` with the new recommended `VirtualFileListener` registration approach via `VirtualFileManager.addAsyncFileListener(...)`.
+3. Replace `UI.PanelFactory.panel(JComponent)` with a supported layout method such as using `JBPanel`, `FormBuilder`, or `PanelFactory.createPanel()`.
+4. Replace `StringsKt__StringsJVMKt.capitalize(String)` with `string.replaceFirstChar(Char::titlecase)` (Kotlin idiomatic).
+5. Replace usage of deprecated class `ComponentPanelBuilder` in `TemplateVariablesDialog.createCenterPanel()` with a modern alternative (e.g., `FormBuilder`).
+
+Ensure compatibility with IntelliJ Platform 2025.2 and update UI layout structure where necessary.
+```

@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.JBUI
+import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.UI
 import com.sebnoirot.copierhelper.copier.TemplateVariable
 import java.awt.BorderLayout
@@ -57,10 +58,18 @@ class TemplateVariablesDialog(
         val panel = formBuilder.panel
         panel.border = JBUI.Borders.empty(10)
 
-        // Wrap in a scrollable panel
-        return UI.PanelFactory.panel(panel)
-            .withComment("Configure the template variables. Hover over labels for help text.")
-            .createPanel()
+        // Wrap in a scrollable panel with a comment
+        val scrollPane = JBScrollPane(panel)
+
+        // Create a panel with a comment
+        val commentLabel = JBLabel("Configure the template variables. Hover over labels for help text.")
+        commentLabel.foreground = JBUI.CurrentTheme.ContextHelp.FOREGROUND
+        commentLabel.border = JBUI.Borders.empty(5, 0, 5, 0)
+
+        return FormBuilder.createFormBuilder()
+            .addComponent(scrollPane)
+            .addComponent(commentLabel)
+            .panel
     }
 
     /**
@@ -107,7 +116,7 @@ class TemplateVariablesDialog(
     private fun formatVariableName(name: String): String {
         return name.replace("_", " ")
             .split(" ")
-            .joinToString(" ") { it.capitalize() }
+            .joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
     }
 
     /**

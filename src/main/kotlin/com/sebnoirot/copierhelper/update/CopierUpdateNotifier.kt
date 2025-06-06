@@ -10,9 +10,11 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
+import com.intellij.openapi.vfs.AsyncFileListener
 import com.intellij.openapi.vfs.VirtualFileEvent
 import com.intellij.openapi.vfs.VirtualFileListener
 import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.ProgressIndicator
@@ -133,14 +135,29 @@ class CopierUpdateNotifier(private val project: Project) {
      * Register a file listener to detect when .copier-answers.yml is opened.
      */
     fun registerFileListener() {
-        VirtualFileManager.getInstance().addVirtualFileListener(object : VirtualFileListener {
-            override fun contentsChanged(event: VirtualFileEvent) {
-                if (event.file.name == CopierUpdateChecker.ANSWERS_FILE) {
-                    LOG.info("Copier answers file changed, checking for updates")
-                    checkForUpdatesAndNotify()
+        VirtualFileManager.getInstance().addAsyncFileListener(object : AsyncFileListener {
+            override fun prepareChange(events: List<VFileEvent>): AsyncFileListener.ChangeApplier? {
+                // Check if any of the events is related to the .copier-answers.yml file
+                val hasAnswersFileEvent = events.any { event ->
+                    val file = event.file
+                    file != null && file.name == CopierUpdateChecker.ANSWERS_FILE
+                }
+
+                if (!hasAnswersFileEvent) {
+                    return null
+                }
+
+                // Return a ChangeApplier that will be called after the changes are applied
+                return object : AsyncFileListener.ChangeApplier {
+                    override fun afterVfsChange() {
+                        LOG.info("Copier answers file changed, checking for updates")
+                        ApplicationManager.getApplication().invokeLater {
+                            checkForUpdatesAndNotify()
+                        }
+                    }
                 }
             }
-        })
+        }, project)
     }
 }
 

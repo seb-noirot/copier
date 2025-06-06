@@ -1,6 +1,8 @@
 package com.sebnoirot.copierhelper.settings
 
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
@@ -35,18 +37,18 @@ class CopierSettingsComponent {
 
     init {
         // Configure file choosers
+        val copierPathDescriptor = FileChooserDescriptor(true, false, false, false, false, false)
+        copierPathDescriptor.title = "Select Copier Executable"
+        copierPathDescriptor.description = "Select the path to the Copier CLI executable"
         copierPathField.addBrowseFolderListener(
-            "Select Copier Executable",
-            "Select the path to the Copier CLI executable",
-            null,
-            FileChooserDescriptorFactory.createSingleFileDescriptor()
+            TextBrowseFolderListener(copierPathDescriptor)
         )
 
+        val outputFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+        outputFolderDescriptor.title = "Select Default Output Folder"
+        outputFolderDescriptor.description = "Select the default folder where generated projects will be placed"
         defaultOutputFolderField.addBrowseFolderListener(
-            "Select Default Output Folder",
-            "Select the default folder where generated projects will be placed",
-            null,
-            FileChooserDescriptorFactory.createSingleFolderDescriptor()
+            TextBrowseFolderListener(outputFolderDescriptor)
         )
 
         // Configure conflict strategy combo box

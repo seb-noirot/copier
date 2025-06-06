@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.TextBrowseFolderListener
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.CollectionComboBoxModel
@@ -61,11 +62,9 @@ class TemplateUrlDialog(private val project: Project) : DialogWrapper(project) {
         }
 
         // Configure target folder chooser
+        val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
         targetFolderField.addBrowseFolderListener(
-            null,
-            null,
-            project,
-            FileChooserDescriptorFactory.createSingleFolderDescriptor()
+            TextBrowseFolderListener(descriptor, project)
         )
 
         // Configure fetch versions button
