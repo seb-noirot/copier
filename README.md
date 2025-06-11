@@ -46,6 +46,16 @@ Ideal for standardizing new project setups and automating boilerplate creation.
   Download the [latest release](https://github.com/seb-noirot/copier/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+### Configuration
+
+After installation, you need to configure the path to the Copier executable:
+
+1. Install Copier if you haven't already: `pip install copier`
+2. Go to <kbd>Settings/Preferences</kbd> > <kbd>Tools</kbd> > <kbd>Copier Helper</kbd>
+3. Set the Copier CLI Path:
+   - On macOS/Linux: Usually just `copier` if it's in your PATH
+   - On Windows: You might need to specify the full path (e.g., `C:\Users\username\AppData\Local\Programs\Python\Python39\Scripts\copier.exe`)
+
 ---
 
 ## Development

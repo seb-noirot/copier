@@ -47,9 +47,13 @@ object CopierExecutor {
         // Check if this is an SSH Git URL (git@hostname:path/repo.git)
         val isSSHUrl = templateUrl.startsWith("git@") && templateUrl.contains(":")
 
+        // Get the configured Copier path from settings
+        val settings = com.sebnoirot.copierhelper.settings.CopierSettings.getInstance()
+        val copierPath = settings.copierPath
+
         // Build command line
         val commandLine = GeneralCommandLine()
-            .withExePath("copier") // Assuming copier is in PATH
+            .withExePath(copierPath) // Use the configured path
             .withCharset(StandardCharsets.UTF_8)
             .withWorkDirectory(project.basePath)
 
@@ -151,10 +155,11 @@ object CopierExecutor {
         val conflictStrategy = settings.conflictStrategy
         val skipAnsweredQuestions = settings.skipAnsweredQuestions
         val updateToLatestVersion = settings.updateToLatestVersion
+        val copierPath = settings.copierPath
 
         // Build command line
         val commandLine = GeneralCommandLine()
-            .withExePath("copier")
+            .withExePath(copierPath) // Use the configured path
             .withCharset(StandardCharsets.UTF_8)
             .withWorkDirectory(directory)
             .withParameters("update", "--conflict", conflictStrategy)
